@@ -9,6 +9,7 @@ int main()
 	++n;
 	for(;n-->0;){
 		scanf("%d%d",&b,&e);
+		/*
 		printf("%d:%d-%d:",n,b,e);
 		if(b>g && b>c){
 			x=b;
@@ -25,6 +26,7 @@ int main()
 		d+=sqrt((x-c)*(x-c)+y*y);
 		y=0;
 		c=x;
+		*/
 	}
 	printf("%lf\n",d);
 	return 0;
