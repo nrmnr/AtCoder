@@ -1,24 +1,15 @@
 #include "stdio.h"
-int mx(int s[], int n){
-	int m = 0;
-	for (;n-->0;) {
-		if (s[n] >= m) m = s[n];
+int main()
+{
+	int n,c[]={0,0,0,0},mx=0,mn=0;
+	scanf("%d\n",&n);
+	for(;n-->0;){
+		c[getchar()-'1']++;
 	}
-	return m;
-}
-int mn(int s[], int n){
-	int m = 0xffff;
-	for (;n-->0;) {
-		if (s[n] <= m) m = s[n];
+	for(n=0;n<4;++n){
+		if(c[n]>c[mx])mx=n;
+		if(c[n]<c[mn])mn=n;
 	}
-	return m;
-}
-int main(){
-	int c, s[]={0,0,0,0};
-	scanf("%d", &c);
-	for (;c=getchar(),~c;){
-		if('1'<=c&&c<='4') s[c-'1']++;
-	}
-	printf("%d %d\n", mx(s,4), mn(s,4));
+	printf("%d %d\n",c[mx],c[mn]);
 	return 0;
 }
