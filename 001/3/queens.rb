@@ -9,16 +9,22 @@ def view board
 end
 
 # クイーンが置けるか調査
-def enable board, target_x, target_y
-	BoardSize.times do |y|
-	# 上,下
-		return false if board[target_x][y]
-		# 右上,左下
-		diagonal_x = target_x + target_y - y
-		return false if (0...BoardSize).include? diagonal_x and board[diagonal_x][y]
-		# 左上,右下
-		diagonal_x = target_x + y - target_y
-		return false if (0...BoardSize).include? diagonal_x and board[diagonal_x][y]
+def enable? board, x, y
+	dirc = [[0,1], [0,-1], [1,0], [-1,0], [1,1], [1,-1], [-1,1], [-1,-1]]
+	dirc.each do |dx, dy|
+		return false unless enable_direction? board, x, y, dx, dy
+	end
+	return true
+end
+
+def enable_direction? board, x, y, dx, dy
+	rng = (0...BoardSize)
+	x += dx
+	y += dy
+	while rng.include? x and rng.include? y
+		return false if board[y][x]
+		x += dx
+		y += dy
 	end
 	return true
 end
@@ -28,9 +34,7 @@ def is_valid? board
 	board.each_with_index do |row, y|
 		row.each_with_index do |cell, x|
 			next unless cell
-			y.downto 0 do |ty|
-				# todo
-			end
+			return false if ! enable? board, x, y
 		end
 	end
 	return true
@@ -54,10 +58,10 @@ def resolve board, y
 		return resolve board, y+1
 	else
 		BoardSize.times do |x|
-			if enable board, x, y
-				board[x][y] = true
+			if enable? board, x, y
+				board[y][x] = true
 				return true if resolve board, y+1
-				board[x][y] = false
+				board[y][x] = false
 			end
 		end
 		return false
