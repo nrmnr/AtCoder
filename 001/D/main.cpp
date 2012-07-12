@@ -10,9 +10,7 @@ struct Range
 	int r;
 	Range(int l, int r){ this->l = l; this->r = r; }
 };
-typedef vector<Range> Ranges;
-
-Ranges ranges;
+vector<Range> ranges;
 
 double calc_dist(int r_min, int r_max, int start, int goal)
 {
@@ -22,7 +20,7 @@ double calc_dist(int r_min, int r_max, int start, int goal)
 	if (r_min == r_max) {
 		return 0;
 	} else if (r_max - r_min == 1) {
-		return sqrt(dx*dx+dy*dy);
+		return hypot(dx, dy);
 	}
 
 	for (int row = r_min; row <= r_max; ++row) {
@@ -38,16 +36,15 @@ double calc_dist(int r_min, int r_max, int start, int goal)
 				calc_dist(row, r_max, rng.r, goal);
 		}
 	}
-	return sqrt(dx*dx+dy*dy);
+	return hypot(dx, dy);
 }
 
 int main()
 {
 	int n, start, goal;
 	cin >> n >> start >> goal;
-	++n;
 
-	for(;n-->0;){
+	for(++n;n-->0;){
 		int l, r;
 		cin >> l >> r;
 		ranges.push_back(Range(l,r));
