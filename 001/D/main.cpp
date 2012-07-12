@@ -6,13 +6,13 @@ using namespace std;
 
 struct Range
 {
-	int l;
-	int r;
-	Range(int l, int r){ this->l = l; this->r = r; }
+	long l;
+	long r;
+	Range(long l, long r){ this->l = l; this->r = r; }
 };
 vector<Range> ranges;
 
-double calc_dist(int r_min, int r_max, int start, int goal)
+double calc_dist(long r_min, long r_max, long start, long goal)
 {
 	const double dx = goal - start;
 	const double dy = r_max - r_min;
@@ -23,7 +23,7 @@ double calc_dist(int r_min, int r_max, int start, int goal)
 		return hypot(dx, dy);
 	}
 
-	for (int row = r_min; row <= r_max; ++row) {
+	for (long row = r_min; row <= r_max; ++row) {
 		const Range rng = ranges[row];
 		const double pass = start + dx * (row - r_min) / dy;
 		if (pass < rng.l) {
@@ -41,11 +41,11 @@ double calc_dist(int r_min, int r_max, int start, int goal)
 
 int main()
 {
-	int n, start, goal;
+	long n, start, goal;
 	cin >> n >> start >> goal;
 
 	for(++n;n-->0;){
-		int l, r;
+		long l, r;
 		cin >> l >> r;
 		ranges.push_back(Range(l,r));
 	}
