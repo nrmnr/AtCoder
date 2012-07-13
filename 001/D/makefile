@@ -8,3 +8,6 @@ ap.exe: main.cpp
 
 cppdbg: main.cpp
 	g++ main.cpp -o ap.exe -g -O0
+
+clean:
+	-rm a.exe ap.exe
