@@ -1,8 +1,8 @@
-#include <iostream>
-#include <iomanip>
-#include <vector>
+#include <cstdio>
+#include <cfloat>
 #include <cmath>
-using namespace std;
+#include <iostream>
+#include <vector>
 
 struct Range
 {
@@ -10,48 +10,54 @@ struct Range
 	long r;
 	Range(long l, long r){ this->l = l; this->r = r; }
 };
-vector<Range> ranges;
-
-double calc_dist(long r_min, long r_max, long start, long goal)
-{
-	const double dx = goal - start;
-	const double dy = r_max - r_min;
-
-	if (r_min == r_max) {
-		return 0;
-	} else if (r_max - r_min == 1) {
-		return hypot(dx, dy);
-	}
-
-	for (long row = r_min; row <= r_max; ++row) {
-		const Range rng = ranges[row];
-		const double pass = start + dx * (row - r_min) / dy;
-		if (pass < rng.l) {
-			return
-				calc_dist(r_min, row, start, rng.l) +
-				calc_dist(row, r_max, rng.l, goal);
-		} else if (pass > rng.r) {
-			return
-				calc_dist(r_min, row, start, rng.r) +
-				calc_dist(row, r_max, rng.r, goal);
-		}
-	}
-	return hypot(dx, dy);
-}
 
 int main()
 {
 	long n, start, goal;
-	cin >> n >> start >> goal;
+	std::cin >> n >> start >> goal;
 
-	for(++n;n-->0;){
+	std::vector<Range> ranges;
+	ranges.reserve(n+1);
+	for (long i = 0; i <= n; ++i) {
 		long l, r;
-		cin >> l >> r;
+		std::cin >> l >> r;
 		ranges.push_back(Range(l,r));
 	}
+	ranges[n] = (Range(goal,goal));
 
-	cout << fixed << setprecision(11)
-			 << calc_dist(0, ranges.size()-1, start, goal)
-			 << endl;
+	double l_view_angle = -DBL_MAX;
+	double r_view_angle = DBL_MAX;
+	long l_wall_y = 0, r_wall_y = 0;
+	double dist = 0;
+	long turning_y = 0;
+	for (long y = 1; y <= n; ++y) {
+		const Range rng = ranges[y];
+		double l_va = (double)(rng.l - start) / (y - turning_y);
+		if (l_va > l_view_angle) {
+			l_view_angle = l_va;
+			l_wall_y = y;
+		}
+		double r_va = (double)(rng.r - start) / (y - turning_y);
+		if (r_va < r_view_angle) {
+			r_view_angle = r_va;
+			r_wall_y = y;
+		}
+		if (l_view_angle > r_view_angle) {
+			long x;
+			if (y == r_wall_y) {
+				x = ranges[l_wall_y].l;
+				y = l_wall_y;
+			} else {
+				x = ranges[r_wall_y].r;
+				y = r_wall_y;
+			}
+			dist += hypot(x - start, y - turning_y);
+			start = x; turning_y = y;
+			l_view_angle = -DBL_MAX;
+			r_view_angle = DBL_MAX;
+		}
+	}
+	dist += hypot(goal - start, n - turning_y);
+	printf("%.12lf\n", dist);
 	return 0;
 }
