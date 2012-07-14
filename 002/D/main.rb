@@ -8,7 +8,7 @@ lambda {
 	lines.each do |line|
 		odd = even = 0
 		line.scan /(o+)(\.+)(x+)/ do |o,d,x|
-			puts o+d+x
+			# puts o+d+x
 			if d.size.odd?
 				odd += 1
 			else
