@@ -8,7 +8,6 @@ lambda {
 			short_cut << c1 + c2
 		end
 	end
-	short_cut = short_cut.sort.uniq
 
 	gets
 	cmd = gets.chomp
