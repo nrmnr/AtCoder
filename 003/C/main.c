@@ -16,9 +16,10 @@ double solv(int r, int c, double weight, double min) {
 	Point n[4] = {{r-1,c}, {r+1,c}, {r,c-1}, {r,c+1}};
 	int i;
 	char b = map[r][c];
+	weight *= 0.99;
 	map[r][c] = '#';
 	for(i=0;i<4;++i){
-		l = solv(n[i].r, n[i].c, weight*0.99, min);
+		l = solv(n[i].r, n[i].c, weight, min);
 		if(l>max) max = l;
 	}
 	map[r][c] = b;
