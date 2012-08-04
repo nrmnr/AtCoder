@@ -1,11 +1,14 @@
 #include <iostream>
 using namespace std;
+typedef long long ll;
+const ll div = 1000000007LL;
 int main()
 {
-	long long n, m, c;
+	ll n, m, c;
 	cin >> n >> m;
+	if(n < 0){ n *= -1; }
 	c = 0;
 	// todo
-	cout << c % 1000000007 << endl;
+	cout << c << endl;
 	return 0;
 }
