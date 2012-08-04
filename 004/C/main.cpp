@@ -7,26 +7,22 @@ long long gcd(long long a, long long b){
 }
 int main()
 {
-	bool f = false;
 	char c;
-	long long x, y, g, z, m, n;
+	long long x, y, z, g, m, n, s;
 	cin >> x >> c >> y;
 	g = gcd(x, y);
 	x /= g; y /= g;
 
-	n = 2*x/y;
-	if((2*x)%y != 0) n++;
-
-	z = ((n+1)*y-2*x)*n;
-	if(z % (2*y) == 0){
-		m = z / (2*y);
-		cout << n << " " << m << endl;
-		f = true;
-	}
-	++n;
-	if(2*x == y*(n-1)){
-		cout << n << " " << n << endl;
-		f = true;
+	bool f = false;
+	for(int i = 0; i < 2; ++i){
+		z = (2*x)/(y*y) + i;
+		n = z*y;
+		s = n*(n+1)/2;
+		m = s - z*x;
+		if(0 < m && m <= n){
+			cout << n << " " << m << endl;
+			f = true;
+		}
 	}
 	if(!f){
 		cout << "Impossible" << endl;
