@@ -2,8 +2,14 @@
 int h, w;
 char map[500][501];
 int direc[4][2] = {{-1,0},{1,0},{0,-1},{0,1}};
+void show(){
+	int i;
+	for(i=0;i<h;++i) printf("%s\n",map[i]);
+	printf("\n");
+}
 int solv(int x, int y, int d){
-	if(x<0||w<=x||y<0||h<=y||map[y][x]=='+') return 0;
+	if(x<0||w<=x||y<0||h<=y||map[y][x]=='x') return 0;
+	/*show();*/
 	if(map[y][x]=='g') return 1;
 	int r;
 	if(map[y][x]=='#'){
@@ -14,7 +20,7 @@ int solv(int x, int y, int d){
 		return r;
 	}
 	int i;
-	map[y][x] = '+';
+	map[y][x] = 'x';
 	for(i=0;i<4;++i){
 		r = solv(x+direc[i][0], y+direc[i][1], d);
 		if(r==1) return r;
@@ -37,8 +43,6 @@ int main()
 			}
 		}
 	}
-	/* for(i=0;i<h;++i)printf("%s\n",map[i]); */
-	/* printf("%d,%d\n",x,y); */
 	printf(solv(x,y,2)? "YES\n":"NO\n");
 	return 0;
 }
