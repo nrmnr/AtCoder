@@ -1,24 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 int main()
 {
 	int i,n,c;
-	char line[101], *p = line;
-	char *words[50] = {NULL};
+	char word[101] = {'\0'};
 	scanf("%d\n", &n);
-	gets(line);
-	words[0] = line;
-	for(i=1; *p != '.'; ++p){
-		if(*p == ' '){
-			*p = '\0';
-			words[i++] = p+1;
-		}
-	}
-	*p = '\0';
 	for(c=i=0; i<n; ++i){
-		if(strcmp(words[i], "TAKAHASHIKUN") == 0 ||
-			 strcmp(words[i], "Takahashikun") == 0 ||
-			 strcmp(words[i], "takahashikun") == 0){
+		scanf("%s", word);
+		if(i==n-1){
+			int l=strlen(word);
+			word[l-1] = '\0';
+		}
+		if(strcmp(word, "TAKAHASHIKUN") == 0 ||
+			 strcmp(word, "Takahashikun") == 0 ||
+			 strcmp(word, "takahashikun") == 0){
 			++c;
 		}
 	}
