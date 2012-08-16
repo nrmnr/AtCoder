@@ -1,0 +1,17 @@
+task :default => [:test]
+
+file 'a.exe' => ['main.c'] do |t|
+	sh "gcc main.c"
+end
+
+def test_proc num, expected
+	result = `a.exe < data#{num}`.chomp
+	puts "test #{num} error. acutual:#{result}/expected:#{expected}" if result != expected
+end
+
+task :test => ['a.exe'] do |t|
+	open('expected').readlines.each_with_index do |expected, num|
+		test_proc num+1, expected.chomp
+	end
+end
+
