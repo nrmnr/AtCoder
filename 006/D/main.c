@@ -1,76 +1,46 @@
 #include <stdio.h>
+int h,w,stack[1000000],*stp;
 char board[1000][1001];
-char *abc[7][8] = {
-	{
-		".......",
-		"...o...",
-		"..o.o..",
-		".o...o.",
-		".ooooo.",
-		".o...o.",
-		"......."
-	},
-	{
-		".......",
-		".oooo..",
-		".o...o.",
-		".oooo..",
-		".o...o.",
-		".oooo..",
-		"......."
-	},
-	{
-		".......",
-		"..ooo..",
-		".o...o.",
-		".o.....",
-		".o...o.",
-		"..ooo..",
-		"......."
-	}
-};
-int search(int n, int ratio, int rot, int sx, int sy){
-	int x,y,rx,ry,tx,ty;
-	char **c = abc[n];
-	for(y=0;y<7;++y){
-		for(x=0;x<7;++x){
-			switch(rot){
-			case 0: tx = x;   ty = y;   break;
-			case 1: tx = 6-y; ty = x;   break;
-			case 2: tx = 6-x; ty = 6-y; break;
-			case 3: tx = y;   ty = 6-x; break;
-			}
-			for(ry=0;ry<ratio;++ry){
-				for(rx=0;rx<ratio;++rx){
-					if(c[ty][tx] != board[sy+y*ratio+ry][sx+x*ratio+rx]) return 0;
-				}
+int count_aside(int sx, int sy){
+	int c,dx,dy,stx,sty,x,y,st;
+	stp = stack;
+	*stp = sy * w + sx;
+	board[sy][sx] = '.';
+	for(c=1;stp>=stack;){
+		st = *stp--;
+		stx = st % w;
+		sty = st / w;
+		for(dy=-1;dy<=1;++dy){
+			for(dx=-1;dx<=1;++dx){
+				x = stx + dx;
+				y = sty + dy;
+				if(x<0||x>=w||y<0||y>=h||board[y][x]!='o') continue;
+				board[y][x] = '.';
+				*(++stp) = y * w + x;
+				++c;
 			}
 		}
 	}
-	for(y=0;y<ratio*7;++y){
-		for(x=0;x<ratio*7;++x){
-			board[sy+y][sx+x] = 'x';
-		}
-	}
-	return 1;
-};
+	return c;
+}
 int main()
 {
-	int i,h,w;
+	int i;
 	scanf("%d%d\n",&h,&w);
 	for(i=0;i<h;++i){
 		gets(board[i]);
 	}
-	int n=(h<w)?h:w;
-	int r,x,y,rot,c[3]={0};
-	for(r=1;r<=n/7;++r){
-		for(y=0;y<=h-r*7;++y){
-			for(x=0;x<=w-r*7;++x){
-				for(rot=0;rot<4;++rot){
-					for(i=0;i<3;++i){
-						if(search(i,r,rot,x,y)) c[i]++;
-					}
-				}
+	int a,ca,r,x,y,c[3]={0};
+	for(y=0;y<h;++y){
+		for(x=0;x<w;++x){
+			if(board[y][x]!='o') continue;
+			ca = count_aside(x,y);
+			for(r=1;;++r){
+				if(ca % (r*r) != 0) continue;
+				a = ca / (r*r);
+				if(a==12){ c[0]++; break; }
+				if(a==16){ c[1]++; break; }
+				if(a==11){ c[2]++; break; }
 			}
 		}
 	}
