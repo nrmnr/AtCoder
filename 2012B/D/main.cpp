@@ -8,41 +8,41 @@ struct P{ int x, y; P(int _x, int _y):x(_x),y(_y){}; };
 vector<string> board;
 int h, w;
 
-int count_destroy(P p){
-	if(board[p.y][p.x] == '#') return 0;
-	int c = 0;
+bool can_destroy(P p){
+	if(board[p.y][p.x] == '#') return false;
 	for(int x = 0; x < w; ++x){
-		if(board[p.y][x] == '#') ++c;
+		if(board[p.y][x] == '#') return true;
 	}
 	for(int y = 0; y < h; ++y){
-		if(board[y][p.x] == '#') ++c;
+		if(board[y][p.x] == '#') return true;
 	}
-	return c;
+	return false;
 };
 
 P find_bomb_point(){
-	int m = 0;
-	P p(-1,-1);
 	for(int y = 0; y < h; ++y){
 		for(int x = 0; x < w; ++x){
-			if(board[y][x] == '#') continue;
-			int tm = count_destroy(P(x,y));
-			if(tm > m){
-				m = tm;
-				p.x = x; p.y = y;
+			if(board[y][x] == '.' && can_destroy(P(x,y))){
+				return P(x,y);
 			}
 		}
 	}
-	return p;
+	return P(-1,-1);
 };
 
-void bomb(P p){
+void bomb(P p, vector<P>& destroy){
 	if(board[p.y][p.x] == '#') return;
 	for(int x = 0; x < w; ++x){
-		board[p.y][x] = '.';
+		if(board[p.y][x] == '#'){
+			board[p.y][x] = '.';
+			destroy.push_back(P(x,p.y));
+		}
 	}
 	for(int y = 0; y < h; ++y){
-		board[y][p.x] = '.';
+		if(board[y][p.x] == '#'){
+			board[y][p.x] = '.';
+			destroy.push_back(P(p.x,y));
+		}
 	}
 };
 
@@ -53,6 +53,26 @@ bool all_clear(){
 		}
 	}
 	return true;
+};
+
+int solv(int c){
+	if(all_clear()) return c;
+	P p = find_bomb_point();
+	if(p.x == -1) return 1e9;
+
+	board[p.y][p.x] = 'x';
+	int tc1 = solv(c);
+	board[p.y][p.x] = '.';
+
+	vector<P> destroy;
+	bomb(p, destroy);
+	int tc2 = solv(c+1);
+	for(; !destroy.empty(); destroy.pop_back()){
+		P p = destroy.back();
+		board[p.y][p.x] = '#';
+	}
+
+	return min(tc1, tc2);
 };
 
 int main(){
@@ -73,11 +93,6 @@ int main(){
 		return 0;
 	}
 
-	int c = 0;
-	for(;!all_clear();++c){
-		P p = find_bomb_point();
-		bomb(p);
-	}
-	cout << c << endl;
+	cout << solv(0) << endl;
 	return 0;
 }
