@@ -1,0 +1,13 @@
+task :default => [:test]
+
+def test_proc num, expected
+	result = `ruby main.rb data#{num}`.chomp
+	puts "test #{num} error. acutual:#{result}/expected:#{expected}" if result != expected
+end
+
+task :test => ['main.rb'] do |t|
+	open('expected').readlines.each_with_index do |expected, num|
+		test_proc num+1, expected.chomp
+	end
+end
+
